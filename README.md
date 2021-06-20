@@ -15,7 +15,7 @@
 ### Dependencies
 
 - Spring Boot DevTools
-- Spring Weg
+- Spring Web
 - Rest Repositories
 
 You don´t need to select Lombok when you have the extension.
