@@ -124,4 +124,16 @@ These are only the dependencies wich can be copy pasted in the Project
     </dependencies>
 ```
 
+## Extensions for VSCode
 
+- Debugger for Java
+- Java Extension Pack
+- Java Test Runner
+- Lombok Annotations Support for VS Code
+- Maven for Java
+- MySQL
+- Project Manager for Java
+- Spring Boot Dashboard
+- Spring Boot Extension Pack
+- Spring Boot Tools
+- Spring Initializr Tools
