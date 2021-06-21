@@ -125,7 +125,7 @@ These are only the dependencies wich can be copy pasted in the Project
     </dependencies>
 ```
 
-## ARepository
+## AResource
 
 ```
 import lombok.extern.slf4j.Slf4j;
@@ -187,7 +187,7 @@ public abstract class AResource<R extends AEntity, ID extends Serializable> {
 
 }
 ```
-### Import ARepository
+### Import AResource
 
 ```
 import org.hibernate.Hibernate;
