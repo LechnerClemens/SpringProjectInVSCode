@@ -1,4 +1,5 @@
 
+
 # Create a simple Spring Project in VSCode
 
 ## Create Project
@@ -124,6 +125,104 @@ These are only the dependencies wich can be copy pasted in the Project
     </dependencies>
 ```
 
+## ARepository
+
+```
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
+import java.io.Serializable;
+
+@Slf4j
+@SuppressWarnings("unchecked")
+public abstract class AResource<R extends AEntity, ID extends Serializable> {
+
+    private JpaRepository<R,ID> repository;
+
+    public AResource(JpaRepository<R,ID> repository)
+    {
+        this.repository = repository;
+    }
+    
+    @CrossOrigin
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public R create(@RequestBody @Valid R resource){
+        R createdResource = repository.save(resource);
+        log.info("created resource:" + createdResource.getId());
+
+        return (R)Hibernate.unproxy(createdResource);
+    }
+
+    @CrossOrigin
+    @GetMapping(path="/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public R read(@PathVariable("id") ID id)
+    {
+        R resource = repository.getOne(id);
+        log.info("Fetching resource with id:" +resource.getId());
+        return (R)Hibernate.unproxy(resource);
+    }
+
+    @CrossOrigin
+    @PutMapping(path="/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void update(@RequestBody @Valid R resource, @PathVariable("id") ID id)
+    {
+        repository.save(resource);
+        log.info("saved changes for resource: "+ id);
+    }
+
+    @CrossOrigin
+    @DeleteMapping(path="/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void delete(@PathVariable("id") ID id){
+        repository.deleteById(id);
+        log.info("deleted resource: "+ id);
+    }
+
+}
+```
+### Import ARepository
+
+```
+import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+
+@RestController
+@Slf4j
+@RequestMapping(path="/users")
+public class UserResource extends AResource<User, Long>{
+    
+    @Autowired
+    private IUserRepository userRepository;
+
+    public UserResource(@Autowired JpaRepository<User,Long> repository)
+    {
+        super(repository);
+    }
+
+}
+```
+
+
 ## Extensions for VSCode
 
 - Debugger for Java
@@ -137,3 +236,5 @@ These are only the dependencies wich can be copy pasted in the Project
 - Spring Boot Extension Pack
 - Spring Boot Tools
 - Spring Initializr Tools
+
+
